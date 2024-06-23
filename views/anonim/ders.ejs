@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row">
+            
+            
+                <div class="card">
+                    
+
+                    <h2 class="text-center"><%= ders.dersKodu %> -- <%= ders.name %></h1>
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            Dersi Veren öğretim elemanı:
+                        </div>
+                        <div class="col-md-9">
+                            <%= ders.user.fullname %>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            Ön Koşul:
+                        </div>
+                        <div class="col-md-9">
+                            <%= ders.onKosul %>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            Kaynak Kitaplar:
+                        </div>
+                        <div class="col-md-9">
+                            <%= kaynak.kitaplar %>
+                        </div>
+                    </div>
+                    <h3>Ders içerikleri</h3>
+
+                    <table class="table table-bordered table-striped table-light mt-3">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">Ders Kodu</th>
+                                <th >Hafta</th>
+                                <th>Tanımalanan Ders İçeriği</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            <% dersicerikleri.forEach(icerikk => { %>
+                                <tr>
+                                    <td><%= icerikk.derDersKodu %></td>
+                                  
+                                    <td><%= icerikk.hafta %></td>
+                                    
+                                    <td> <%= icerikk.text %></td>
+                                    
+                                   
+                                </tr>
+                            <% }) %>
+                        
+                        </tbody>
+                    </table>
+                </div>
+               
+            
+
+        </div>
+    </div>
+    <script src="/static/js/clickingAnonim.js"></script>
+</body>
+</html>

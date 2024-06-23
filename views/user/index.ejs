@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <%- include('../partials/head') %>
+</head>
+<body class="bg-light">
+    <%- include('../partials/nav') %>
+            <div class="row m-3">
+                <% if (typeof message != "undefined") { %>
+                    <div class="alert alert-<%= message.class %>">
+                        <%= message.text %>
+                    </div>
+                <% } %>
+                
+                <div class="col-md-11 offset-md-1 ">
+                    <div class="width50">
+                        
+                        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                            <div class="container-fluid">
+                               
+                              
+                                <div class="navbar-nav">
+                                    <% if (isIdareci) { %>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                              Ders İşlemleri
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                              <li><button class="dropdown-item" id="assignButton">Derse Öğretim Elemanı Ata</button></li>
+                                              <li><button class="dropdown-item" id="assignButton2">Ders-Öğretim Elemanı Listesi</button></li>
+                                            </ul>
+                                        </div>
+                                        <div class="dropdown ms-3">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                              Program Çıktısı İşlemleri
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                 
+                                                    <li><button class="dropdown-item" id="assignButton3">Program Çıktısı Ata</button></li>
+                                                
+                                                <li><button class="dropdown-item" id="assignButton4">Program Çıktıları</button></li>
+                                            </ul>
+                                        </div>
+                                        
+                                        
+                                    <% } %>
+                                    <% if (isOgretimElemani) { %>
+                                      
+                                        <button class="nav-link" id="assign1">Ders İçeriği Oluştur</button>
+                                        <button class="nav-link" id="assign2">Kaynak Kitap</button>
+                                        <button class="nav-link" id="assign3">Ön koşul</button>
+                                        <button class="nav-link" id="assign4">Öğrenim Çıktısı</button>
+                                        
+                                        
+                                    <% } %>
+                                </div>
+                            </div>
+                        
+                        </nav>
+                    </div>
+                    <div class="container mt-4">
+                        <!-- idareci işlemleri -->
+                        <% if (isIdareci) { %>
+                            <div class="showline gosterme" id="ogretimelemaniata">
+                                <form action="/user/derseogretimelemani" method="post" class="">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label" for="ders">Ders</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-select" name="ders" id="ders">
+                                                <option value="-1" selected>Seçiniz</option>
+                                                    <% dersler.forEach(ders => { %>
+                                                        <option value="<%= ders.dersKodu %>"><%= ders.name %></option>
+                                                    <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label" for="ogretimElemani">Öğretim Elemanı</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-select" name="ogretimElemani" id="ogretimElemani">
+                                                <option value="-1" selected>Seçiniz</option>
+                                                <% ogretimElemanlari.forEach(ogretimElemani => { %>
+                                                    <option value="<%= ogretimElemani.id %>"><%= ogretimElemani.fullname %></option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 text-center mt-4">
+                                        <div class="col-sm-10 offset-sm-2">
+                                          <button type="submit" class="btn btn-primary">Kaydet</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                
+                            </div>
+                            <div class="showline gosterme bg-secondary" id="dersListesi">
+                                <table class="table table-bordered table-striped table-light mt-3">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 100px;">Ders Kodu</th>
+                                            <th >Dersin ismi</th>
+                                            <th>Öğretim Elemanı</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        <% dersler.forEach(ders => { %>
+                                            <tr>
+                                                <td>#<%= ders.dersKodu %></td>
+                                              
+                                                <td><%= ders.name %></td>
+                                                <% if (ders.user != null) { %>
+                                                    <td><%= ders.user.dataValues.fullname %></td>
+                                                <% } %>
+                                               
+                                            </tr>
+                                        <% }) %>
+                                    
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="showline gosterme" id="programciktisiata">
+                                <form action="/user/programciktisiolustur" method="post"  class="">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <input type="hidden" name="programId" value="<%= program.id %>">
+                                    <div class="row mb-3 mt-3">
+                                        <label for="programCiktisi" class="col-sm-4 col-form-label">Program Çıktısı</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="programCiktisi" name="programCiktisi">
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="row mb-3 text-center mt-4">
+                                        <div class="col-sm-10 offset-sm-2">
+                                            <% if (program.programCiktiSayisi<12) { %>
+                                                <button type="submit" class="btn btn-primary">Kaydet</button>
+                                            <% } %>
+                                            <% if (program.programCiktiSayisi>=12) { %>
+                                                <div class="alert alert-danger">12 Program çıktısı limitine ulaştınız</div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="showline gosterme" id="programciktilari">
+                                <table class="table table-bordered table-striped table-light mt-3">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 100px;">Program İsmi</th>
+                                            <th >Program Çıktısı</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        <% programCiktilari.forEach(programcikti => { %>
+                                            <tr>
+                                                <td><%= program.name %></td>
+                                              
+                                                <td><%= programcikti.text %></td>
+                                                
+                                                <td> <a href="/user/deletecikti/<%= programcikti.id %>" class="btn btn-danger m-auto">Sil</a></td>
+                                                
+                                               
+                                            </tr>
+                                        <% }) %>
+                                    
+                                    </tbody>
+                                </table>
+                            </div>
+                        <% } %>
+                        <% if (isOgretimElemani) { %>
+                            <div class="showline gosterme" id="dersicerigiolustur">
+                                <form action="/user/icerikcikti" method="post" class="">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <div class="row mb-3">
+                                        <label class="col-sm-4 col-form-label" for="ders">Ders</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-select" name="ders" id="ders">
+                                                <option value="-1" selected>Seçiniz</option>
+                                                    <% dersler.forEach(ders => { %>
+                                                        <option value="<%= ders.dersKodu %>"><%= ders.name %></option>
+                                                    <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 mt-3">
+                                        <label for="hafta" class="col-sm-4 col-form-label">Hafta</label>
+                                        <div class="col-sm-8">
+                                            <input type="number" class="form-control" id="hafta" name="hafta" max="14" min="1">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 mt-3">
+                                        <label for="icerik" class="col-sm-4 col-form-label">Ders İçeriği</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="icerik" name="icerik">
+                                        </div>
+                                    </div>
+                               
+                                    
+                                    <div class="row mb-3 text-center mt-4">
+                                        <div class="col-sm-10 offset-sm-2">
+                                          <button type="submit" class="btn btn-primary">Kaydet</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="showline gosterme" id="kaynakkitapolustur">
+                                <form action="/user/kaynakkitap" method="post" class="">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <div class="row mb-3">
+                                        <label class="col-sm-4 col-form-label" for="ders">Ders</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-select" name="ders" id="ders">
+                                                <option value="-1" selected>Seçiniz</option>
+                                                    <% dersler.forEach(ders => { %>
+                                                        <option value="<%= ders.dersKodu %>"><%= ders.name %></option>
+                                                    <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                 
+                                    <div class="row mb-3 mt-3">
+                                        <label for="kaynak" class="col-sm-4 col-form-label">Kaynak Kitap</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="kaynak" name="kaynak">
+                                        </div>
+                                    </div>
+                               
+                                    
+                                    <div class="row mb-3 text-center mt-4">
+                                        <div class="col-sm-10 offset-sm-2">
+                                          <button type="submit" class="btn btn-primary">Kaydet</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="showline gosterme" id="onkosulolustur">
+                                <form action="/user/onkosul" method="post" class="">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <div class="row mb-3">
+                                        <label class="col-sm-4 col-form-label" for="ders">Ders</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-select" name="ders" id="ders">
+                                                <option value="-1" selected>Seçiniz</option>
+                                                    <% dersler.forEach(ders => { %>
+                                                        <option value="<%= ders.dersKodu %>"><%= ders.name %></option>
+                                                    <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                 
+                                    <div class="row mb-3 mt-3">
+                                        <label for="onkosul" class="col-sm-4 col-form-label">Ön Koşul</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="onkosul" name="onkosul" >
+                                        </div>
+                                    </div>
+                               
+                                    
+                                    <div class="row mb-3 text-center mt-4">
+                                        <div class="col-sm-10 offset-sm-2">
+                                          <button type="submit" class="btn btn-primary">Kaydet</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="showline gosterme" id="ogrenimciktisiolustur">
+                                <form action="/user/ogrenimcikti" method="post" class="">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <div class="row mb-3">
+                                        <label class="col-sm-4 col-form-label" for="ders">Ders</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-select" name="ders" id="ders">
+                                                <option value="-1" selected>Seçiniz</option>
+                                                    <% dersler.forEach(ders => { %>
+                                                        <option value="<%= ders.dersKodu %>"><%= ders.name %></option>
+                                                    <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-sm-4 col-form-label" for="pcikti">Program Çıktısı</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-select" name="pcikti" id="pcikti">
+                                                <option value="-1" selected>Seçiniz</option>
+                                                    <% programCiktilari.forEach(programcikti => { %>
+                                                        <option value="<%= programcikti.id %>"><%= programcikti.text %></option>
+                                                    <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                 
+                                    <div class="row mb-3 mt-3">
+                                        <label for="texto" class="col-sm-4 col-form-label">Öğrenim Çıktısı</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="texto" name="texto">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 mt-3">
+                                        <label for="iliski" class="col-sm-4 col-form-label">Seçilen program çıktısı ile ilişki</label>
+                                        <div class="col-sm-8">
+                                            <input type="number" class="form-control" id="iliski" name="iliski" max="5" min="1">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-3 text-center mt-4">
+                                        <div class="col-sm-10 offset-sm-2">
+                                          <button type="submit" class="btn btn-primary">Kaydet</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        <% } %>
+                  
+                    </div>
+                    
+                </div>
+            </div>
+          
+        
+        </div>
+        <% if (isIdareci) { %>
+            
+            <script src="/static/js/clickingIdareci.js"></script>
+        <% } %>
+        <% if (isOgretimElemani) { %>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script src="/static/js/clickingOgretimElemani.js"></script>
+        <% } %>
+</body>
+</html>

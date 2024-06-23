@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-3">
+                
+                    <div class="dropdow mb-3" >
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 100%;">
+                          Mühendislik Fakültesi
+                        </button>
+                        <ul class="dropdown-menu">
+                            <% programs.forEach(program => { %>
+                             
+                                <li><a class="dropdown-item" href="/<%= program.id %>"><%= program.name %></a></li>
+                            <% }) %>
+                          
+                        </ul>
+                      </div>
+                      <div class="dropdown mb-3">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 100%;">
+                          Diş Hekimliği Fakültesi
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="#">Diş Hekimliği Lisans</a></li>
+                          
+                          
+                        </ul>
+                      </div>
+                
+              
+            </div>
+            <div class="col-md-9">
+                
+                <nav class="navbar navbar-expand-lg bg-body-tertiary">  
+                    <div class="container-fluid">
+
+                        <div class="navbar-nav">
+                            
+                            <button class="nav-link" id="assignbutton">Program Çıktıları</button>
+                            <button class="nav-link" id="assignbutton1">Dersler</button>
+                            
+                            
+                        </div>
+                    </div>
+                </nav>
+                <div class="showline gosterme " id="ciktilar">
+                   <% programCiktilari.forEach(cikti => { %>
+                    <div class="card my-3">
+                        <div class="card-body">
+                          <%= cikti.text %>
+                        </div>
+                      </div>
+                   <% }) %>
+                </div>
+                <div class="showline gosterme" id="dersler">
+                    <table class="table table-bordered table-striped table-light mt-3">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">Ders Kodu</th>
+                                <th >Dersin ismi</th>
+                                <th>Ders Yarıyıl </th>
+                                <th>Öğretim Elemanı</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            <% dersler.forEach(ders => { %>
+                                <tr>
+                                    <td><a href="/ders/<%= ders.dersKodu %>"><%= ders.dersKodu %></a></td>
+                                  
+                                    <td><%= ders.name %></td>
+                                    <td><%= ders.donem %></td>
+                                    <% if (ders.user != null) { %>
+                                        <td><%= ders.user.dataValues.fullname %></td>
+                                    <% } %>
+                                   
+                                </tr>
+                            <% }) %>
+                        
+                        </tbody>
+                    </table>
+                </div>
+               
+            </div>
+
+        </div>
+    </div>
+    <script src="/static/js/clickingAnonim.js"></script>
+</body>
+</html>

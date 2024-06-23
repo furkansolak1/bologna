@@ -1,0 +1,10 @@
+{
+    "db":{
+        "name":"bologna",
+        "dialect":"mysql",
+        "host":"localhost"  
+    },
+    "session":{
+        "secret":"mysecrett"
+    }
+}
